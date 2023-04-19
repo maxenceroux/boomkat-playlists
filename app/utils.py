@@ -8,30 +8,31 @@ import json
 import logging
 
 
-def add_bestsellers_to_playlist(playlist_id, bestsellers):
-    scrapper = SpotifyScrapper(
-        chromedriver="prod",
-        spotify_user=os.environ["SPOTIFY_USER"],
-        spotify_password=os.environ["SPOTIFY_PASSWORD"],
-    )
-    token = scrapper.get_spotify_token()
+def add_bestsellers_to_playlist(token, playlist_id, bestsellers):
     client = SpotifyController(
         os.environ["SPOTIFY_CLIENT_ID"], os.environ["SPOTIFY_CLIENT_SECRET"]
     )
     client.delete_all_playlist_items(token, playlist_id)
     album_ids = list(bestsellers["album_id"].unique())
     client.add_albums_tracks_to_playlist(token, album_ids, playlist_id)
-    return token
+    return True
 
 
 def update_playlists():
     with open(os.environ["GENRE_DICT_PATH"]) as f:
         genre_dict = json.load(f)
+    scrapper = SpotifyScrapper(
+        chromedriver="prod",
+        spotify_user=os.environ["SPOTIFY_USER"],
+        spotify_password=os.environ["SPOTIFY_PASSWORD"],
+    )
+    token = scrapper.get_spotify_token()
+    scrapper.quit()
     for g in genre_dict:
         bestsellers = get_bestsellers(g["genre_id"])
         print(g["genre"], bestsellers.shape)
         playlist_id = g["playlist_id"]
-        token = add_bestsellers_to_playlist(playlist_id, bestsellers)
+        add_bestsellers_to_playlist(token, playlist_id, bestsellers)
         base_image_path = f"static/boomkat_{g['genre']}.png"
         update_playlist_cover(token, playlist_id, bestsellers, base_image_path)
 

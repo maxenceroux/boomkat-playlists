@@ -14,7 +14,7 @@ class SpotifyScrapper(SeleniumScrapper):
     def get_spotify_token(self) -> str:
 
         self.driver.get(
-            "https://developer.spotify.com/console/put-playlist-images/"
+            "https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile"
         )
         time.sleep(1)
         button = self.driver.find_element_by_id(
@@ -22,9 +22,9 @@ class SpotifyScrapper(SeleniumScrapper):
         ).click()
         time.sleep(2)
 
-        self.driver.find_elements_by_xpath(
-            "//*[contains(text(), 'Log in to test this operation')]"
-        )[0].click()
+        self.driver.find_elements_by_xpath("//*[contains(text(), 'Log in')]")[
+            0
+        ].click()
         time.sleep(3)
         button = self.driver.find_element_by_id("login-username")
         button.send_keys(self.spotify_user)
@@ -49,5 +49,4 @@ class SpotifyScrapper(SeleniumScrapper):
                     break
                 else:
                     token = None
-        self.driver.quit()
         return token
