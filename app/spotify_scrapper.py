@@ -17,8 +17,9 @@ class SpotifyScrapper(SeleniumScrapper):
             "https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile"
         )
         start_time = time.time()
-        while len(
-            self.driver.find_elements_by_id("onetrust-accept-btn-handler") == 0
+        while (
+            len(self.driver.find_elements_by_id("onetrust-accept-btn-handler"))
+            == 0
         ):
             time.sleep(0.1)
             if time.time() - start_time > 10:
@@ -28,20 +29,21 @@ class SpotifyScrapper(SeleniumScrapper):
             "onetrust-accept-btn-handler"
         ).click()
         time.sleep(1)
-
         self.driver.find_elements_by_xpath("//*[contains(text(), 'Log in')]")[
             0
         ].click()
-        while len(self.driver.find_elements_by_id("login-username") == 0):
+        while len(self.driver.find_elements_by_id("login-username")) == 0:
             time.sleep(0.1)
         button = self.driver.find_element_by_id("login-username")
         button.send_keys(self.spotify_user)
         button = self.driver.find_element_by_id("login-password")
         button.send_keys(self.spotify_password)
         button = self.driver.find_element_by_id("login-button").click()
-        while len(
-            self.driver.find_elements_by_xpath(
-                "//*[contains(text(), 'Try it')]"
+        while (
+            len(
+                self.driver.find_elements_by_xpath(
+                    "//*[contains(text(), 'Try it')]"
+                )
             )
             == 0
         ):
