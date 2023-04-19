@@ -16,10 +16,14 @@ class SpotifyScrapper(SeleniumScrapper):
         self.driver.get(
             "https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile"
         )
+        start_time = time.time()
         while len(
             self.driver.find_elements_by_id("onetrust-accept-btn-handler") == 0
         ):
             time.sleep(0.1)
+            if time.time() - start_time > 10:
+                print("Timed out waiting for OAuth")
+                break
         button = self.driver.find_element_by_id(
             "onetrust-accept-btn-handler"
         ).click()
