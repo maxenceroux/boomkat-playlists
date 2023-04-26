@@ -29,12 +29,15 @@ def update_playlists():
     token = scrapper.get_spotify_token()
     scrapper.quit()
     for g in genre_dict:
-        bestsellers = get_bestsellers(g["genre_id"])
-        print(g["genre"], bestsellers.shape)
-        playlist_id = g["playlist_id"]
-        add_bestsellers_to_playlist(token, playlist_id, bestsellers)
-        base_image_path = f"static/boomkat_{g['genre']}.png"
-        update_playlist_cover(token, playlist_id, bestsellers, base_image_path)
+        try:
+            bestsellers = get_bestsellers(g["genre_id"])
+            print(g["genre"], bestsellers.shape)
+            playlist_id = g["playlist_id"]
+            add_bestsellers_to_playlist(token, playlist_id, bestsellers)
+            base_image_path = f"static/boomkat_{g['genre']}.png"
+            update_playlist_cover(token, playlist_id, bestsellers, base_image_path)
+        except:
+            print(f"Genre {g} not updated")
 
 
 def update_playlist_cover(token, playlist_id, bestsellers, base_image_path):
