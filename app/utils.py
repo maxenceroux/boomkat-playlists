@@ -21,6 +21,7 @@ def add_bestsellers_to_playlist(token, playlist_id, bestsellers):
 def update_playlists():
     with open(os.environ["GENRE_DICT_PATH"]) as f:
         genre_dict = json.load(f)
+    print("Getting Spotify Token")
     scrapper = SpotifyScrapper(
         chromedriver="prod",
         spotify_user=os.environ["SPOTIFY_USER"],
@@ -28,6 +29,7 @@ def update_playlists():
     )
     token = scrapper.get_spotify_token()
     scrapper.quit()
+    print("Getting bestsellers")
     for g in genre_dict:
         try:
             bestsellers = get_bestsellers(g["genre_id"])
